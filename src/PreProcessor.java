@@ -1,36 +1,55 @@
 package proj;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
 
-/**
- * 
- * @author Haiyang Huang
- * 
- */
+public class PreProcessor {
+	BufferedImage bi;
 
-public abstract class PreProcessor {
-
-	BufferedImage img;
-
-	public PreProcessor(String pathImageFile) throws IOException {
-		this.img = ImageIO.read(new File(pathImageFile));
+	PreProcessor(BufferedImage bi) {
+		this.bi = bi;
 	}
 
-	abstract BufferedImage removeNoise();
+	
 
-	abstract BufferedImage correctSkewing();
+	BufferedImage removeNoise() {
+		return null;
+	}
 
-	abstract List<BufferedImage> extract();
+	/**
+	 * 
+	 * @return
+	 */
+	BufferedImage correctSkewing() {
+		return null;
+	}
 
-	abstract BufferedImage correctSlant();
+	List<BufferedImage> extract() {
+		return null;
+	}
 
-	abstract BufferedImage normalize();
+	BufferedImage correctSlant() {
+		return null;
+	}
 
-	abstract BufferedImage thin();
+	BufferedImage normalize() {
+		return null;
+	}
+
+	BufferedImage thin() {
+		return null;
+	}
+
+	
+
+	
+
+	
 
 }
