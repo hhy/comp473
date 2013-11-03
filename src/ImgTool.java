@@ -10,7 +10,8 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 public class ImgTool {
-
+	
+	
 	static public BufferedImage scale(BufferedImage bi, int width, int height) {
 		BufferedImage img = new BufferedImage(width, height,
 				BufferedImage.TYPE_INT_RGB);
@@ -27,20 +28,36 @@ public class ImgTool {
 		/*
 		 * normalize angle between [-PI, PI)
 		 */
-		while (a < 0)
+		//System.out.print((int)(180*a/Math.PI));
+		while (a < -Math.PI)
 			a += Math.PI * 2;
-		while (a >= Math.PI * 2)
+		while (a >= Math.PI )
 			a -= Math.PI * 2;
-		a -= Math.PI;
+		
+//		System.out.println("---->  "+(int)(180*a/Math.PI));
+	
 
 		int wSrc = bi.getWidth(), hSrc = bi.getHeight();
 		Point pUL = new Point(0, 0), pUR = new Point(wSrc - 1, 0), pDL = new Point(
 				0, hSrc - 1), pDR = new Point(wSrc - 1, hSrc - 1);
 		Point ppUL = pUL, ppUR = rotatePoint(pUR, a), ppDL = rotatePoint(pDL, a), ppDR = rotatePoint(
 				pDR, a);
+		
+//		System.out.print(String.format("%30s", "original vertex: "));
+//		for(Point p: new Point[]{pUL, pUR, pDL, pDR}){
+//			System.out.print(String.format("[%3d, %3d], ", p.x, p.y));
+//		}
+//		System.out.println();
+//		System.out.print(String.format("%30s", String.format("after rotate %d, vertex:", (int)(180*a/Math.PI))));
+//		for(Point p: new Point[]{ppUL, ppUR, ppDL, ppDR}){
+//			System.out.print(String.format("[%3d, %3d], ", p.x, p.y));
+//		}
+//		System.out.println();
+		
+		
 		int wDst = Math.max(Math.abs(ppUL.x - ppDR.x),
-				Math.abs(ppUR.x - ppDL.x)), hDst = Math.max(
-				Math.abs(ppUL.y - ppDR.y), Math.abs(ppUR.y - ppDL.y));
+				Math.abs(ppUR.x - ppDL.x))+1, hDst = Math.max(
+				Math.abs(ppUL.y - ppDR.y), Math.abs(ppUR.y - ppDL.y))+1;
 		BufferedImage img = new BufferedImage(wDst, hDst,
 				BufferedImage.TYPE_INT_RGB);
 
@@ -62,7 +79,7 @@ public class ImgTool {
 			left = ppDR.x;
 		}
 		
-		System.out.println(String.format(""));
+		//System.out.println(String.format("info: top: %d, left: %d, width: %d, height: %d", top, left, wDst, hDst));
 
 		double cos = Math.cos(a), sin = Math.sin(a);
 		for (int x = left; x < left + wDst; x++)
@@ -149,9 +166,13 @@ public class ImgTool {
 		final String pathImage = "/home/bart/Pictures/a.png";
 		BufferedImage ia = ImageIO.read(new File(pathImage));
 		//BufferedImage ic=ImgTool.scale(ia, 800, 800);
-		BufferedImage ib = rotate(ia, Math.PI / 6);
+		ia=ImgTool.scale(ia, 100, 100);
+		BufferedImage ib = rotate(ia, 0);
+		//ib = rotate(ia, Math.PI / 6);
+		ib = rotate(ia, -Math.PI / 6);
+		//ib = ImgTool.toBin(ib, 150, false);
 		
-		ImgTool.showImg(ia, "", 800);
+		ImgTool.showImg(ib, "", 800);
 		
 	}
 
