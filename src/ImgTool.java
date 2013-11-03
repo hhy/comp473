@@ -101,7 +101,7 @@ public class ImgTool {
 				(int) (p.x * (-sin) + p.y * cos));
 	}
 
-	static BufferedImage toBin(BufferedImage bi, int threadhold,
+	static BufferedImage toBin(BufferedImage bi, int threshold,
 			boolean inverse) {
 		BufferedImage img = new BufferedImage(bi.getWidth(), bi.getHeight(),
 				BufferedImage.TYPE_INT_RGB);
@@ -109,7 +109,7 @@ public class ImgTool {
 			for (int y = 0; y < bi.getHeight(); y++) {
 				int rgb = bi.getRGB(x, y);
 				int grayscale = ((rgb & 0x0ff) + ((rgb >> 8) & 0x0ff) + ((rgb >> 16) & 0x0ff)) / 3;
-				if (grayscale > threadhold)
+				if (grayscale > threshold)
 					img.setRGB(x, y, inverse ? Color.WHITE.getRGB()
 							: Color.BLACK.getRGB());
 				else
