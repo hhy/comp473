@@ -144,23 +144,7 @@ public class ImgTool {
 		fr.setVisible(true);
 	}
 	
-	static double getSkewAngle(BufferedImage bi, int threadhold) {
-
-		BufferedImage img = toBin(bi, threadhold, false);
-		int w = bi.getWidth(), h = bi.getHeight();
-		int[] yhist = new int[h];
-		int rgbWhite = Color.white.getRGB();
-		for (int y = 0; y < h; y++) {
-			yhist[y] = 0;
-			
-				for (int x = 0; x < w; x++) {
-				int rgb = img.getRGB(x, y);
-				if (rgb == rgbWhite)
-					yhist[x]++;
-			}
-		}
-		return 0;
-	}
+	
 
 	public static void main(String[] args) throws IOException {
 		final String pathImage = "/home/bart/Pictures/a.png";
