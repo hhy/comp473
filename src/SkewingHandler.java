@@ -12,21 +12,29 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class SkewingHandler {
-	static int[] averageFilterForArray(int[] a, int w) {
+	static int[] averageFilterForArray(int[] a, int w, int start, int end) {
+		//ArrayChart.showArray(a, 800, 600, "befor");
 		int[] b = new int[a.length];
-		for (int i = 0; i < a.length; i++) {
+		for(int i=0; i<start; i++) b[i]=a[i];
+		for(int i=end; i<b.length; i++) b[i]=a[i];		
+		for (int i = start+1; i < end-1; i++) {
 			int s = a[i];
 			for (int j = 1; j < w; j++) {
 				int k1 = i - j, k2 = i + j;
-				if (k1 < 0)
+				if (k1 < start)
 					k1 = k2;
-				if (k2 >= a.length)
+				if (k2 >= end)
 					k2 = k1;
 				s += a[k1] + a[k2];
 			}
-			b[i] = s / (2 * w + 1);
+			b[i] = (int)(s / (2 * w + 1.0));
 		}
+		//ArrayChart.showArray(b, 800, 600, "after");
 		return b;
+	}
+
+	static int[] averageFilterForArray(int[] a, int w) {
+		return averageFilterForArray(a, w, 0, a.length);
 	}
 
 	public static void showData(int[][] data, int w, int h) {
@@ -89,7 +97,7 @@ public class SkewingHandler {
 		HistroChart.showHistroDistrib(bi, 800, 500, title);
 	}
 
-	static int getWidthPeakYDistribution(int[] yhist) {
+	static int getWidthPeakDistribution(int[] yhist) {
 
 		int[] yyhist = averageFilterForArray(yhist, 3);
 
@@ -130,28 +138,143 @@ public class SkewingHandler {
 		return idxEnd - idxStart;
 	}
 
-	static public double getSkewingAngle(BufferedImage bi) {
-		return 0;
+	static private double getSkewingAngleByHistro(BufferedImage bi, double mid,
+			double width) {
+		double angle = 0;
+		int h = -1, num = 5;
+
+		for (int i = -num; i < num; i++) {
+			double a = mid + i * (width / num);
+			BufferedImage ie = ImgTool.rotate(bi, a);
+			int[] yDist = SkewingHandler.getYDistribution(ie, 150, 4, false);
+			// int[] xDist = SkewingHandler.getXDistribution(ie, 150, 4, false);
+			int h1 = SkewingHandler.getWidthPeakDistribution(yDist);
+			if (h1 < h || h < 0) {
+				h = h1;
+				angle = a;
+			}
+			// int w = SkewingHandler.getWidthPeakYDistribution(xDist);
+			// String title = String.format("Angle: %d, height: %d ", (int) (180
+			// * a / Math.PI), h);
+			// System.out.println(title);
+			//SkewingHandler.showImg(ie, title);
+		}
+		return angle;
 	}
+
+	static public double getSkewingAngleByHistro(BufferedImage bi) {
+
+		double a = 0, aOld = 66.0, width = Math.PI / 2.0, errorTolerance = Math.PI / 180;
+		for (int i = 0; i < 8; i++) {
+			// System.out.println(i);
+			a = getSkewingAngleByHistro(bi, a, width);
+			if (Math.abs(aOld - a) < errorTolerance)
+				return -a;
+			width /= 5.0;
+			aOld = a;
+		}
+		// System.out.println("dddddddd");
+		return -a;
+	}
+
+	static public double getSkewAngleHough(BufferedImage bi, int threshold,
+			boolean inverse) {
+		BufferedImage img = ImgTool.toBin(bi, threshold, inverse);
+		int h = bi.getHeight(), w = bi.getWidth();
+		int[] ys = new int[w], xs = new int[h];
+		int rgbWhite = Color.WHITE.getRGB();
+		for (int i = 0; i < w; i++)
+			ys[i] = -1;
+		for (int i = 0; i < h; i++)
+			xs[i] = -1;
+		for (int x = 0; x < w; x++) {
+			for (int y = 0; y < h; y++) {
+				// if(xs[y]>=0 && ys[x]>=0) break;
+				int rgb = img.getRGB(x, y);
+				if (rgb != rgbWhite)
+					continue;
+				xs[y] = x;
+				ys[x] = y;
+				break;
+			}
+		}
+		//ArrayChart.showArray(xs, 800, 600, "before: " + w + " x " + h);
+		//ArrayChart.showArray(ys, 800, 600, "" + w + " x " + h);
+		
+		linearFilling(xs);
+		linearFilling(ys);
+		ArrayChart.showArray(ys, 800, 600, "" + w + " x " + h);
+		ArrayChart.showArray(xs, 800, 600, "after: " + w + " x " + h);
+
+	
+		int[] wxs = positiveWidthArray(xs), wys = positiveWidthArray(ys);
+		int[] xxs=null;
+		int[] yys=null;
+		for(int i=0; i<5; i++){
+			yys=SkewingHandler.averageFilterForArray(ys, 4, wys[0], wys[1]);
+			xxs=SkewingHandler.averageFilterForArray(xs, 4, wxs[0], wxs[1]);
+			ys=yys;
+			xs=xxs;
+		}
+		ArrayChart.showArray(yys, 800, 600, "---" + w + " x " + h);
+		ArrayChart.showArray(xxs, 800, 600, "---" + w + " x " + h);
+		 //wxs = positiveWidthArray(xs); wys = positiveWidthArray(ys);
+		
+		int offset=(wys[1]-wys[0])/30;
+		return Math.atan((ys[wys[1]-offset]-ys[wys[0]+offset])/(double)(xs[wxs[1]-offset]-xs[wxs[0]+offset]));
+	}
+
+	static private int[] positiveWidthArray(int[] l) {
+		
+		int d[]=new int[2]; d[0]= -1;
+		for (int i = 0; i < l.length; i++) {
+			if (l[i] > 0 && d[0] < 0)
+				d[0] = i;
+			if (l[i] <= 0 && d[0]> 0){
+				d[1]=i;
+				return d;
+			}
+		}
+		d[0]=0; d[1]=l.length;
+		return d;
+	}
+
+	static private void linearFilling(int[] x) {
+		int start, end;
+		for (int i = 0; i < x.length; i = end) {
+			start = -1;
+			end = -1;
+			for (int j = i; j < x.length && end < 0; j++) {
+				if (x[j] < 0)
+					continue;
+				if (start < 0)
+					start = j;
+				else {
+					end = j;
+					break;
+				}
+			}
+			if (end < 0)
+				break;
+			int step = (x[end] - x[start]) / (end - start);
+			for (int j = start + 1; j < end; j++) {
+				x[j] = x[start] + step * (j - start);
+			}
+		}
+	}
+	
+
 
 	public static void main(String[] args) throws IOException {
 		final String pathImage = "/home/bart/Pictures/c.png";
 		BufferedImage ia = ImageIO.read(new File(pathImage));
 		BufferedImage ic = ImgTool.scale(ia, 800, 800);
-		BufferedImage id = ImgTool.rotate(ic, 0);
+//		BufferedImage id = ImgTool.rotate(ic, Math.PI / 6);
+		BufferedImage id = ImgTool.rotate(ic, 0.5);
 
-		for (int i = -20; i < 20; i += 5) {
-			double a = i * Math.PI / (double) 80;
-			BufferedImage ie = ImgTool.rotate(id, a);
-			int[] yDist = SkewingHandler.getYDistribution(ie, 150, 4, false);
-			int[] xDist = SkewingHandler.getXDistribution(ie, 150, 4, false);
-			int h = SkewingHandler.getWidthPeakYDistribution(yDist);
-			int w = SkewingHandler.getWidthPeakYDistribution(xDist);
-			String title = String.format("Angle: %d, product: %d x %d = %d",
-					(int) (180 * a / Math.PI), w, h, w * h);
-			System.out.println(title);
-			SkewingHandler.showImg(ie, title);
-		}
+		double a=getSkewAngleHough(id, 150, false);
+		double b = SkewingHandler.getSkewingAngleByHistro(id);
+		System.out.println(String.format("angle is : %f(correct answer), %f(hough), %f(histogram)", Math.toDegrees(1.0), Math.toDegrees(a), Math.toDegrees(b)));
 
 	}
 
