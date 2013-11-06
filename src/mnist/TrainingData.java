@@ -19,8 +19,7 @@ public class TrainingData {
 	}
 	void showElement(int index, int sideLength) throws IOException {
 		BufferedImage img=(BufferedImage) images.getObject(index);
-		int lbl=(int) labels.getObject(index);
-		
+		int lbl=((Integer) labels.getObject(index)).intValue();
 		ImgTool.showImg(img, ""+lbl, sideLength);
 	}
 
