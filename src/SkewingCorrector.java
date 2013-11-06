@@ -11,7 +11,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class SkewingHandler {
+public class SkewingCorrector {
 	static int[] averageFilterForArray(int[] a, int w, int start, int end) {
 		//ArrayChart.showArray(a, 800, 600, "befor");
 		int[] b = new int[a.length];
@@ -146,9 +146,9 @@ public class SkewingHandler {
 		for (int i = -num; i < num; i++) {
 			double a = mid + i * (width / num);
 			BufferedImage ie = ImgTool.rotate(bi, a);
-			int[] yDist = SkewingHandler.getYDistribution(ie, 150, 4, false);
+			int[] yDist = SkewingCorrector.getYDistribution(ie, 150, 4, false);
 			// int[] xDist = SkewingHandler.getXDistribution(ie, 150, 4, false);
-			int h1 = SkewingHandler.getWidthPeakDistribution(yDist);
+			int h1 = SkewingCorrector.getWidthPeakDistribution(yDist);
 			if (h1 < h || h < 0) {
 				h = h1;
 				angle = a;
@@ -211,8 +211,8 @@ public class SkewingHandler {
 		int[] xxs=null;
 		int[] yys=null;
 		for(int i=0; i<5; i++){
-			yys=SkewingHandler.averageFilterForArray(ys, 4, wys[0], wys[1]);
-			xxs=SkewingHandler.averageFilterForArray(xs, 4, wxs[0], wxs[1]);
+			yys=SkewingCorrector.averageFilterForArray(ys, 4, wys[0], wys[1]);
+			xxs=SkewingCorrector.averageFilterForArray(xs, 4, wxs[0], wxs[1]);
 			ys=yys;
 			xs=xxs;
 		}
@@ -263,7 +263,10 @@ public class SkewingHandler {
 		}
 	}
 	
-
+	public static BufferedImage correctSkewing(BufferedImage bi){
+		double angle=SkewingCorrector.getSkewingAngleByHistro(bi);
+		return ImgTool.rotate(bi, -angle);
+	}
 
 	public static void main(String[] args) throws IOException {
 		final String pathImage = "/home/bart/Pictures/c.png";
@@ -272,9 +275,13 @@ public class SkewingHandler {
 //		BufferedImage id = ImgTool.rotate(ic, Math.PI / 6);
 		BufferedImage id = ImgTool.rotate(ic, 0.5);
 
-		double a=getSkewAngleHough(id, 150, false);
-		double b = SkewingHandler.getSkewingAngleByHistro(id);
-		System.out.println(String.format("angle is : %f(correct answer), %f(hough), %f(histogram)", Math.toDegrees(1.0), Math.toDegrees(a), Math.toDegrees(b)));
+		//double a=getSkewAngleHough(id, 150, false);
+		//double b = SkewingCorrector.getSkewingAngleByHistro(id);
+		
+		//System.out.println(String.format("angle is : %f(correct answer), %f(hough), %f(histogram)", Math.toDegrees(1.0), Math.toDegrees(a), Math.toDegrees(b)));
+		ImgTool.showImg(id, "original", 600);
+		BufferedImage img=correctSkewing(id);
+		ImgTool.showImg(img, "corrected", 600);
 
 	}
 

@@ -22,8 +22,8 @@ public class HistroChart extends JPanel {
 	public HistroChart(BufferedImage bi,int w, int h) {
 		this.bi=bi;
 		
-		this.xdata =SkewingHandler.getXDistribution(this.bi, 150, 2, true); 
-		this.ydata =SkewingHandler.getYDistribution(this.bi, 150, 2, true); 
+		this.xdata =SkewingCorrector.getXDistribution(this.bi, 150, 2, true); 
+		this.ydata =SkewingCorrector.getYDistribution(this.bi, 150, 2, true); 
 		this.w = w;
 		this.h = h;
 		this.xMax = xdata[0];
