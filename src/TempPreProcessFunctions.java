@@ -1,4 +1,10 @@
-	// normalize the size of the input image to the specified newWidth and newHeight
+package proj;
+import java.awt.Color;
+
+import java.awt.image.BufferedImage;
+
+public class TempPreProcessFunctions{
+// normalize the size of the input image to the specified newWidth and newHeight
 	public BufferedImage normalize(BufferedImage img, int newWidth, int newHeight)
 	{
 		// initialize an object "newImage" of type BufferedImage that will contain the new normalized image
@@ -261,4 +267,4 @@
 			return 0;
 		}
 	}
-	
+}
