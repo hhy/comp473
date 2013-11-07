@@ -22,8 +22,8 @@ public class HistroChart extends JPanel {
 	public HistroChart(BufferedImage bi,int w, int h) {
 		this.bi=bi;
 		
-		this.xdata =SkewingCorrector.getXDistribution(this.bi, 150, 2, true); 
-		this.ydata =SkewingCorrector.getYDistribution(this.bi, 150, 2, true); 
+		this.xdata =SkewingCorrector.getXDistribution(this.bi, 150, 2, false); 
+		this.ydata =SkewingCorrector.getYDistribution(this.bi, 150, 2, false); 
 		this.w = w;
 		this.h = h;
 		this.xMax = xdata[0];
@@ -58,12 +58,12 @@ public class HistroChart extends JPanel {
 		double interval = this.w /(double) xdata.length;
 		for (int i = 0; i < xdata.length; i++) {
 			g.drawLine((int)(interval * i), (xdata[i] - this.xMin) * this.padding
-					/ (this.xMax - this.xMin) + this.h, (int)(i*interval) , this.h+this.padding-2);
+					/ (this.xMax - this.xMin) + this.h, (int)(i*interval) , this.h);
 		}
 		interval = this.h / (double)ydata.length;
 		for (int i = 0; i < ydata.length; i++) {
 			g.drawLine((ydata[i] - this.yMin) * this.padding
-					/ (this.yMax - this.yMin) + this.w, (int)(interval *i), this.w+this.padding-2, (int)(interval * i));
+					/ (this.yMax - this.yMin) + this.w, (int)(interval *i), this.w, (int)(interval * i));
 		}
 	}
 	
@@ -80,7 +80,6 @@ public class HistroChart extends JPanel {
 
 	static public void main(String[] args) throws IOException {
 		final String pathHome=System.getProperty("user.home");
-		System.out.println(pathHome);
 		final String pathImage = pathHome+"/Pictures/a.png";
 		BufferedImage ia = ImageIO.read(new File(pathImage));
 		BufferedImage ib=ImgTool.rotate(ia, Math.PI/50);
