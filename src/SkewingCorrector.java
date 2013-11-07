@@ -269,7 +269,8 @@ public class SkewingCorrector {
 	}
 
 	public static void main(String[] args) throws IOException {
-		final String pathImage = "/home/bart/Pictures/c.png";
+		final String pathHome=System.getProperty("user.home");
+		final String pathImage = pathHome+"/Pictures/a.png";
 		BufferedImage ia = ImageIO.read(new File(pathImage));
 		BufferedImage ic = ImgTool.scale(ia, 800, 800);
 //		BufferedImage id = ImgTool.rotate(ic, Math.PI / 6);

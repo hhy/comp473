@@ -79,7 +79,9 @@ public class HistroChart extends JPanel {
 
 
 	static public void main(String[] args) throws IOException {
-		final String pathImage = "/home/bart/Pictures/c.png";
+		final String pathHome=System.getProperty("user.home");
+		System.out.println(pathHome);
+		final String pathImage = pathHome+"/Pictures/a.png";
 		BufferedImage ia = ImageIO.read(new File(pathImage));
 		BufferedImage ib=ImgTool.rotate(ia, Math.PI/50);
 		JFrame jf = new JFrame();
