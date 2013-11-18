@@ -48,7 +48,11 @@ public class ImgTool {
 //			System.out.print(String.format("[%3d, %3d], ", p.x, p.y));
 //		}
 //		System.out.println();
-//		System.out.print(String.format("%30s", String.format("after rotate %d, vertex:", (int)(180*a/Math.PI))));
+//		System.out.print(String.format		//BufferedImage ib=f.normalize(ia, 500, 500);
+
+		//BufferedImage ib=ImgTool.rotate(ia, -Math.PI/3);
+		//BufferedImage ib=ImgTool.rotate(ia,0);
+//("%30s", String.format("after rotate %d, vertex:", (int)(180*a/Math.PI))));
 //		for(Point p: new Point[]{ppUL, ppUR, ppDL, ppDR}){
 //			System.out.print(String.format("[%3d, %3d], ", p.x, p.y));
 //		}
@@ -69,7 +73,11 @@ public class ImgTool {
 			top = ppDR.y;
 			left = ppUR.x;
 		} else if (a > 0) {
-			top = ppUR.y;
+			top = ppUR.y;		//BufferedImage ib=f.normalize(ia, 500, 500);
+
+			//BufferedImage ib=ImgTool.rotate(ia, -Math.PI/3);
+			//BufferedImage ib=ImgTool.rotate(ia,0);
+
 			left = 0;
 		} else if (a > -Math.PI / 2) {
 			top = 0;

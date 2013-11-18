@@ -3,9 +3,9 @@ import java.awt.Color;
 
 import java.awt.image.BufferedImage;
 
-public class TempPreProcessFunctions{
+public class Normalizer{
 // normalize the size of the input image to the specified newWidth and newHeight
-	public BufferedImage normalize(BufferedImage img, int newWidth, int newHeight)
+static	public BufferedImage normalize(BufferedImage img, int newWidth, int newHeight)
 	{
 		// initialize an object "newImage" of type BufferedImage that will contain the new normalized image
 		BufferedImage newImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);

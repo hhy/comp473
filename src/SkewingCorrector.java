@@ -47,50 +47,52 @@ public class SkewingCorrector {
 		jf.setVisible(true);
 	}
 
-	static int[] getYDistribution(BufferedImage bi, int threshold,
+	static int[] getPixelsYDistribution(BufferedImage bi, int threshold,
 			int widthFilter, boolean inverse) {
 
 		BufferedImage img = ImgTool.toBin(bi, threshold, inverse);
 		int h = bi.getHeight(), w = bi.getWidth();
-		int[] yhist = new int[h];
+		int[] xs = new int[h];
 		int rgbWhite = Color.white.getRGB();
 		for (int y = 0; y < h; y++) {
-			yhist[y] = 0;
+			xs[y] = 0;
 			for (int x = 0; x < w; x++) {
 				int rgb = img.getRGB(x, y);
 				if (rgb == rgbWhite)
-					yhist[y]++;
+					xs[y]++;
 			}
 		}
 
 		/*
 		 * smooth the distribution
 		 */
-		int[] yyhist = averageFilterForArray(yhist, widthFilter);
-		return yyhist;
+		int[] xxs =xs;
+		if(w>0)xxs = averageFilterForArray(xs, widthFilter);
+		return xxs;
 	}
 
-	static int[] getXDistribution(BufferedImage bi, int threshold,
+	static int[] getPixelsXDistribution(BufferedImage bi, int threshold,
 			int widthFilter, boolean inverse) {
 
 		BufferedImage img = ImgTool.toBin(bi, threshold, inverse);
 		int h = bi.getHeight(), w = bi.getWidth();
-		int[] xhist = new int[w];
+		int[] ys = new int[w];
 		int rgbWhite = Color.white.getRGB();
 		for (int x = 0; x < w; x++) {
-			xhist[x] = 0;
+			ys[x] = 0;
 			for (int y = 0; y < h; y++) {
 				int rgb = img.getRGB(x, y);
 				if (rgb == rgbWhite)
-					xhist[x]++;
+					ys[x]++;
 			}
 		}
 
 		/*
 		 * smooth the distribution
 		 */
-		int[] xxhist = averageFilterForArray(xhist, widthFilter);
-		return xxhist;
+		int[] yys=ys;
+		if(w>0)yys= averageFilterForArray(ys, widthFilter);
+		return yys;
 	}
 
 	static void showImg(BufferedImage bi, String title) {
@@ -146,7 +148,7 @@ public class SkewingCorrector {
 		for (int i = -num; i < num; i++) {
 			double a = mid + i * (width / num);
 			BufferedImage ie = ImgTool.rotate(bi, a);
-			int[] yDist = SkewingCorrector.getYDistribution(ie, 150, 4, false);
+			int[] yDist = SkewingCorrector.getPixelsYDistribution(ie, 150, 4, false);
 			// int[] xDist = SkewingHandler.getXDistribution(ie, 150, 4, false);
 			int h1 = SkewingCorrector.getWidthPeakDistribution(yDist);
 			if (h1 < h || h < 0) {
@@ -274,7 +276,7 @@ public class SkewingCorrector {
 		BufferedImage ia = ImageIO.read(new File(pathImage));
 		BufferedImage ic = ImgTool.scale(ia, 800, 800);
 //		BufferedImage id = ImgTool.rotate(ic, Math.PI / 6);
-		BufferedImage id = ImgTool.rotate(ic, 0.5);
+		BufferedImage id = ImgTool.rotate(ic, -0.5);
 
 		//double a=getSkewAngleHough(id, 150, false);
 		//double b = SkewingCorrector.getSkewingAngleByHistro(id);

@@ -22,8 +22,8 @@ public class HistroChart extends JPanel {
 	public HistroChart(BufferedImage bi,int w, int h) {
 		this.bi=bi;
 		
-		this.xdata =SkewingCorrector.getXDistribution(this.bi, 150, 2, false); 
-		this.ydata =SkewingCorrector.getYDistribution(this.bi, 150, 2, false); 
+		this.xdata =SkewingCorrector.getPixelsXDistribution(this.bi, 150, 2, false); 
+		this.ydata =SkewingCorrector.getPixelsYDistribution(this.bi, 150, 2, false); 
 		this.w = w;
 		this.h = h;
 		this.xMax = xdata[0];
@@ -82,12 +82,17 @@ public class HistroChart extends JPanel {
 		final String pathHome=System.getProperty("user.home");
 		final String pathImage = pathHome+"/Pictures/a.png";
 		BufferedImage ia = ImageIO.read(new File(pathImage));
-		BufferedImage ib=ImgTool.rotate(ia, Math.PI/50);
+		Normalizer f=new Normalizer();
+		//BufferedImage ib=f.normalize(ia, 500, 500);
+
+		BufferedImage ib=ImgTool.rotate(ia, -Math.PI/20);
+		//BufferedImage ib=ImgTool.rotate(ia,0);
 		JFrame jf = new JFrame();
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		jf.getContentPane().add(new HistroChart(ib, 800, 500));
+		jf.getContentPane().add(new HistroChart(ib, 500, 500));
 		jf.pack();
 		jf.setVisible(true);
+		ImgTool.showImg(ib, ""+ib.getHeight()+", "+ib.getWidth(), 500);
 	}
 
 }

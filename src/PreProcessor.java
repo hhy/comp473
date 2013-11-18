@@ -26,8 +26,9 @@ public class PreProcessor {
 	 * 
 	 * @return
 	 */
-	BufferedImage correctSkewing() {
-		return null;
+	static BufferedImage correctSkewing(BufferedImage bi) {
+		return SkewingCorrector.correctSkewing(bi);
+
 	}
 
 	List<BufferedImage> extract() {
@@ -44,6 +45,7 @@ public class PreProcessor {
 
 	BufferedImage thin() {
 		return null;
+		
 	}
 
 	
