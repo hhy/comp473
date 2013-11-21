@@ -1,5 +1,7 @@
 package proj;
 
+import java.awt.Container;
+import java.awt.GridLayout;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -7,78 +9,78 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 public class CharacterExtractor {
-
-	static int[] getStartAndEndDistribution(int[] yhist) {
-
-		int[] yyhist = SkewingCorrector.averageFilterForArray(yhist, 0);
-
+	static void showImgs(BufferedImage[] imgs){
+		JFrame jf=new JFrame("Images number: "+imgs.length);
+		Container c=jf.getContentPane();
+		JPanel jp=new JPanel();
+		jp.setLayout(new GridLayout(1, imgs.length));
+		for(int i=0; i<imgs.length; i++){
+			
+			
+			jp.add(new ImgComponent(imgs[i]));
+			
+		}
+		c.add(jp);
+		jf.pack();
+		jf.setVisible(true);
+		
+	}
+	static int[] getEdges(int[] yhist) {
+//		ArrayChart.showArray(yhist, 400, 300, "original");
+//		int[] yyhist = SkewingCorrector.averageFilterForArray(yhist, 0);
+//		ArrayChart.showArray(yhist, 400, 300, "processed");
+//		yhist=yyhist;
 		/*
 		 * filter the maximum and minum, take the second maximum and minum for
 		 * the threshold
 		 */
-		int max1 = yyhist[0], max2 = max1, min1 = max1, min2 = max1;
-		for (int i = 0; i < yyhist.length; i++) {
-			if (yyhist[i] > max1) {
-				max2 = max1;
-				max1 = yyhist[i];
+		ArrayList<Integer> edges = new ArrayList<Integer>();
+		
+		boolean isBottom = true;
+		for (int i = 0; i < yhist.length; i++) {
+			if( (yhist[i] == 0 && isBottom )||((yhist[i] > 0 && !isBottom )))
+				continue;
+			else if(yhist[i]>0 && isBottom){
+				edges.add(i);
+				isBottom=!isBottom;
+			}else if(yhist[i]==0 && !isBottom){
+				edges.add(i-1);
+				isBottom=!isBottom;
 			}
-			if (yyhist[i] < min1) {
-				min2 = min1;
-				min1 = yyhist[i];
-			}
+			
+			
+
 		}
 
-		int div = (int) ((min2 + max2) / (double) (8));
-
-		int idxStart = -1, idxEnd = -1;
-
-		for (int i = yyhist.length / 40; i < yyhist.length; i++) {
-			int j = yyhist.length - i - 1;
-			if (yyhist[i] > div && idxStart < 0)
-				idxStart = i;
-			if (yyhist[j] > div && idxEnd < 0)
-				idxEnd = j;
-			if (idxStart > 0 && idxEnd > 0)
-				break;
-		}
-
-		// System.out.println(String
-		// .format("start: %d, end: %d, width: %d", idxStart, idxEnd,
-		// idxEnd-idxStart));
-
-		return new int[] { idxEnd, idxStart };
+		int[] es = new int[edges.size()];
+		for (int i = 0; i < es.length; i++)
+			es[i] = edges.get(i);
+		System.out.println("total characters: "+es.length/2+", "+"I am studying pattern recognition".length());
+		return es;
 	}
 
 	static BufferedImage[] getCharacters(BufferedImage img) {
 		int[] xs = SkewingCorrector.getPixelsXDistribution(img, 150, 0, false);
-		int[] ys = SkewingCorrector.getPixelsYDistribution(img, 150, 0, false);
-		int[] hs = getStartAndEndDistribution(ys);
-		//System.out.println(String.format("get width is : %d - %d", hs[0], hs[1]));
-		List<int[]> posChar=new ArrayList<int[]>();
-		int start=-1, end=-1;
-		for(int i=0; i<xs.length; i++){
-			if(xs[i]==0 && end==-1) {
-				end=i;
-				start=-1;
-			}
-			if(xs[i]>0 && start==-1) {
-				start=i;
-				end=-1;
-			}
-			if(end>start && end>0)
-				posChar.add(new int[]{start, end});
-		}
+		// int[] ys = SkewingCorrector.getPixelsYDistribution(img, 150, 0,
+		// false);
+		int[] posEdges = getEdges(xs);
+		ArrayChart.showArray(xs, 500, 400, "");
+		ArrayChart.showArray(posEdges, 500, 400, "");
+		
+		
+		HistroChart.showHistroDistrib(img, 400, 300, "");
 		List<BufferedImage> bis = new ArrayList<BufferedImage>();
-		for(int[] pos: posChar){
-			BufferedImage bi=img.getSubimage(Math.min(pos[0], pos[1]), Math.min(hs[0], hs[1]), Math.abs(pos[0]-pos[1]), Math.abs(hs[0]-hs[1]));
+		for (int i=0; i<posEdges.length; i+=2) {
+			BufferedImage bi = img.getSubimage(posEdges[i], 0, posEdges[i+1]-posEdges[i], img.getHeight());
 			bis.add(bi);
 		}
-		
-		
-
-		return (BufferedImage[]) bis.toArray();
+		BufferedImage[] imgs= bis.toArray(new BufferedImage[0]);
+		showImgs(imgs);
+		return imgs;
 	}
 
 	public static void main(String[] args) throws IOException {

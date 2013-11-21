@@ -13,11 +13,13 @@ import javax.swing.JPanel;
 
 public class SkewingCorrector {
 	static int[] averageFilterForArray(int[] a, int w, int start, int end) {
-		//ArrayChart.showArray(a, 800, 600, "befor");
+		// ArrayChart.showArray(a, 800, 600, "befor");
 		int[] b = new int[a.length];
-		for(int i=0; i<start; i++) b[i]=a[i];
-		for(int i=end; i<b.length; i++) b[i]=a[i];		
-		for (int i = start+1; i < end-1; i++) {
+		for (int i = 0; i < start; i++)
+			b[i] = a[i];
+		for (int i = end; i < b.length; i++)
+			b[i] = a[i];
+		for (int i = start + 1; i < end - 1; i++) {
 			int s = a[i];
 			for (int j = 1; j < w; j++) {
 				int k1 = i - j, k2 = i + j;
@@ -27,9 +29,9 @@ public class SkewingCorrector {
 					k2 = k1;
 				s += a[k1] + a[k2];
 			}
-			b[i] = (int)(s / (2 * w + 1.0));
+			b[i] = (int) (s / (2 * w + 1.0));
 		}
-		//ArrayChart.showArray(b, 800, 600, "after");
+		// ArrayChart.showArray(b, 800, 600, "after");
 		return b;
 	}
 
@@ -50,15 +52,15 @@ public class SkewingCorrector {
 	static int[] getPixelsYDistribution(BufferedImage bi, int threshold,
 			int widthFilter, boolean inverse) {
 
-		BufferedImage img = ImgTool.toBin(bi, threshold, inverse);
+		BufferedImage img = ImgTool.toBin(bi, threshold, true);
 		int h = bi.getHeight(), w = bi.getWidth();
 		int[] xs = new int[h];
-		int rgbWhite = Color.white.getRGB();
+		int rgbBlack = Color.BLACK.getRGB();
 		for (int y = 0; y < h; y++) {
 			xs[y] = 0;
 			for (int x = 0; x < w; x++) {
 				int rgb = img.getRGB(x, y);
-				if (rgb == rgbWhite)
+				if (rgb == rgbBlack)
 					xs[y]++;
 			}
 		}
@@ -66,23 +68,24 @@ public class SkewingCorrector {
 		/*
 		 * smooth the distribution
 		 */
-		int[] xxs =xs;
-		if(w>0)xxs = averageFilterForArray(xs, widthFilter);
+		int[] xxs = xs;
+		if (w > 0)
+			xxs = averageFilterForArray(xs, widthFilter);
 		return xxs;
 	}
 
 	static int[] getPixelsXDistribution(BufferedImage bi, int threshold,
 			int widthFilter, boolean inverse) {
 
-		BufferedImage img = ImgTool.toBin(bi, threshold, inverse);
+		BufferedImage img = ImgTool.toBin(bi, threshold, true);
 		int h = bi.getHeight(), w = bi.getWidth();
 		int[] ys = new int[w];
-		int rgbWhite = Color.white.getRGB();
+		int rgbBlack = Color.BLACK.getRGB();
 		for (int x = 0; x < w; x++) {
 			ys[x] = 0;
 			for (int y = 0; y < h; y++) {
 				int rgb = img.getRGB(x, y);
-				if (rgb == rgbWhite)
+				if (rgb == rgbBlack)
 					ys[x]++;
 			}
 		}
@@ -90,8 +93,9 @@ public class SkewingCorrector {
 		/*
 		 * smooth the distribution
 		 */
-		int[] yys=ys;
-		if(w>0)yys= averageFilterForArray(ys, widthFilter);
+		int[] yys = ys;
+		if (w > 0)
+			yys = averageFilterForArray(ys, widthFilter);
 		return yys;
 	}
 
@@ -119,15 +123,15 @@ public class SkewingCorrector {
 			}
 		}
 
-		int div = (int) ((min2 + max2) / (double) (8));
+		int div = (int) ((min2 + max2-4) / (double) (8));
 
 		int idxStart = -1, idxEnd = -1;
 
 		for (int i = yyhist.length / 40; i < yyhist.length; i++) {
 			int j = yyhist.length - i - 1;
-			if (yyhist[i] > div && idxStart < 0)
+			if ((yyhist[i] > div  )&& idxStart < 0)
 				idxStart = i;
-			if (yyhist[j] > div && idxEnd < 0)
+			if ((yyhist[j] > div )&& idxEnd < 0)
 				idxEnd = j;
 			if (idxStart > 0 && idxEnd > 0)
 				break;
@@ -147,8 +151,9 @@ public class SkewingCorrector {
 
 		for (int i = -num; i < num; i++) {
 			double a = mid + i * (width / num);
-			BufferedImage ie = ImgTool.rotate(bi, a);
-			int[] yDist = SkewingCorrector.getPixelsYDistribution(ie, 150, 4, false);
+			BufferedImage ie = ImgTool.rotate(bi, a, true);
+			int[] yDist = SkewingCorrector.getPixelsYDistribution(ie, 20, 4,
+					true);
 			// int[] xDist = SkewingHandler.getXDistribution(ie, 150, 4, false);
 			int h1 = SkewingCorrector.getWidthPeakDistribution(yDist);
 			if (h1 < h || h < 0) {
@@ -156,10 +161,11 @@ public class SkewingCorrector {
 				angle = a;
 			}
 			// int w = SkewingHandler.getWidthPeakYDistribution(xDist);
-			// String title = String.format("Angle: %d, height: %d ", (int) (180
-			// * a / Math.PI), h);
+			String title = String.format("Angle: %d, height: %d ",
+					(int) (180 * a / Math.PI), h);
 			// System.out.println(title);
-			//SkewingHandler.showImg(ie, title);
+			HistroChart.showHistroDistrib(ie, ie.getWidth() / 2,
+					ie.getHeight() / 2, title);
 		}
 		return angle;
 	}
@@ -200,44 +206,46 @@ public class SkewingCorrector {
 				break;
 			}
 		}
-		//ArrayChart.showArray(xs, 800, 600, "before: " + w + " x " + h);
-		//ArrayChart.showArray(ys, 800, 600, "" + w + " x " + h);
-		
+		// ArrayChart.showArray(xs, 800, 600, "before: " + w + " x " + h);
+		// ArrayChart.showArray(ys, 800, 600, "" + w + " x " + h);
+
 		linearFilling(xs);
 		linearFilling(ys);
 		ArrayChart.showArray(ys, 800, 600, "" + w + " x " + h);
 		ArrayChart.showArray(xs, 800, 600, "after: " + w + " x " + h);
 
-	
 		int[] wxs = positiveWidthArray(xs), wys = positiveWidthArray(ys);
-		int[] xxs=null;
-		int[] yys=null;
-		for(int i=0; i<5; i++){
-			yys=SkewingCorrector.averageFilterForArray(ys, 4, wys[0], wys[1]);
-			xxs=SkewingCorrector.averageFilterForArray(xs, 4, wxs[0], wxs[1]);
-			ys=yys;
-			xs=xxs;
+		int[] xxs = null;
+		int[] yys = null;
+		for (int i = 0; i < 5; i++) {
+			yys = SkewingCorrector.averageFilterForArray(ys, 4, wys[0], wys[1]);
+			xxs = SkewingCorrector.averageFilterForArray(xs, 4, wxs[0], wxs[1]);
+			ys = yys;
+			xs = xxs;
 		}
 		ArrayChart.showArray(yys, 800, 600, "---" + w + " x " + h);
 		ArrayChart.showArray(xxs, 800, 600, "---" + w + " x " + h);
-		 //wxs = positiveWidthArray(xs); wys = positiveWidthArray(ys);
-		
-		int offset=(wys[1]-wys[0])/30;
-		return Math.atan((ys[wys[1]-offset]-ys[wys[0]+offset])/(double)(xs[wxs[1]-offset]-xs[wxs[0]+offset]));
+		// wxs = positiveWidthArray(xs); wys = positiveWidthArray(ys);
+
+		int offset = (wys[1] - wys[0]) / 30;
+		return Math.atan((ys[wys[1] - offset] - ys[wys[0] + offset])
+				/ (double) (xs[wxs[1] - offset] - xs[wxs[0] + offset]));
 	}
 
 	static private int[] positiveWidthArray(int[] l) {
-		
-		int d[]=new int[2]; d[0]= -1;
+
+		int d[] = new int[2];
+		d[0] = -1;
 		for (int i = 0; i < l.length; i++) {
 			if (l[i] > 0 && d[0] < 0)
 				d[0] = i;
-			if (l[i] <= 0 && d[0]> 0){
-				d[1]=i;
+			if (l[i] <= 0 && d[0] > 0) {
+				d[1] = i;
 				return d;
 			}
 		}
-		d[0]=0; d[1]=l.length;
+		d[0] = 0;
+		d[1] = l.length;
 		return d;
 	}
 
@@ -264,27 +272,48 @@ public class SkewingCorrector {
 			}
 		}
 	}
-	
-	public static BufferedImage correctSkewing(BufferedImage bi){
-		double angle=SkewingCorrector.getSkewingAngleByHistro(bi);
-		return ImgTool.rotate(bi, -angle);
+
+	public static BufferedImage correctSkewing(BufferedImage bi) {
+		double angle = SkewingCorrector.getSkewingAngleByHistro(bi);
+		return ImgTool.rotate(bi, -angle, true);
+	}
+
+	public static int getGrayScale(int rgb) {
+		int grayscale = ((rgb & 0x0ff) + ((rgb >> 8) & 0x0ff) + ((rgb >> 16) & 0x0ff)) / 3;
+		return ((rgb >> 24) & 0x0ff);
+		//return grayscale;
 	}
 
 	public static void main(String[] args) throws IOException {
-		final String pathHome=System.getProperty("user.home");
-		final String pathImage = pathHome+"/Pictures/a.png";
+		final String pathHome = System.getProperty("user.home");
+		final String pathImage = pathHome + "/Pictures/a.png";
 		BufferedImage ia = ImageIO.read(new File(pathImage));
 		BufferedImage ic = ImgTool.scale(ia, 800, 800);
-//		BufferedImage id = ImgTool.rotate(ic, Math.PI / 6);
-		BufferedImage id = ImgTool.rotate(ic, -0.5);
+		// BufferedImage id = ImgTool.rotate(ic, Math.PI / 6);
+		BufferedImage id = ImgTool.rotate(ic, -0.5, true);
+		// ImgTool.showImg(id, "", 400);
+		HistroChart.showHistroDistrib(id, id.getWidth() / 2,
+				id.getHeight() / 2, "");
 
-		//double a=getSkewAngleHough(id, 150, false);
-		//double b = SkewingCorrector.getSkewingAngleByHistro(id);
-		
-		//System.out.println(String.format("angle is : %f(correct answer), %f(hough), %f(histogram)", Math.toDegrees(1.0), Math.toDegrees(a), Math.toDegrees(b)));
-		ImgTool.showImg(id, "original", 600);
-		BufferedImage img=correctSkewing(id);
-		ImgTool.showImg(img, "corrected", 600);
+//		System.out.println("white: "
+//				+ getGrayScale(id.getRGB(id.getWidth() / 2,
+//						id.getWidth() / 2 + 40)));
+//		System.out
+//				.println("background: "
+//						+ getGrayScale(id.getRGB(id.getWidth() - 4,
+//								id.getWidth() - 4)));
+//		System.out.println("black: " + getGrayScale(Color.BLACK.getRGB()));
+
+		// BufferedImage id = ImgTool.rotate(ic, -0.5);
+
+		// double a=getSkewAngleHough(id, 150, false);
+		// double b = SkewingCorrector.getSkewingAngleByHistro(id);
+
+		// System.out.println(String.format("angle is : %f(correct answer), %f(hough), %f(histogram)",
+		// Math.toDegrees(1.0), Math.toDegrees(a), Math.toDegrees(b)));
+		 ImgTool.showImg(id, "original", 600);
+		 BufferedImage img=correctSkewing(id);
+		 ImgTool.showImg(img, "corrected", 600);
 
 	}
 
