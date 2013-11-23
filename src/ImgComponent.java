@@ -28,6 +28,14 @@ public class ImgComponent extends Component {
 	public ImgComponent(BufferedImage bi) {
 		this.img = bi;
 	}
+	public ImgComponent(int[][] m){
+		this.img=new BufferedImage(m[0].length, m.length, BufferedImage.TYPE_INT_RGB);
+		for(int y=0; y<m.length; y++)for(int x=0; x<m[0].length; x++){
+			int rgb=m[y][x];
+			int grayscale = (rgb  + (rgb << 8) + (rgb << 16));
+			this.img.setRGB(x, y, grayscale);
+		}
+	}
 
 	@Override
 	public Dimension getPreferredSize() {

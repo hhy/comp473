@@ -7,12 +7,14 @@ import proj.ImgComponent;
 import proj.ImgTool;
 
 public class TrainingData {
-	static final String pathFile="/home/bart/course/comp473/proj/mnist";
-	static final String pathLabelTraining=pathFile+"/train-labels-idx1-ubyte";
-	static final String pathImageTraining=pathFile+"/train-images-idx3-ubyte";
+	public static final String pathFile="/tmp/tt";
+	public static final String pathLabelTraining=pathFile+"/train-labels-idx1-ubyte";
+	public static final String pathImageTraining=pathFile+"/train-images-idx3-ubyte";
 	
 	LabelsFileMnist labels;
 	ImagesFileMnist images;
+	MatrixFile matrixs;
+	
 	TrainingData(String pathLabels, String pathImages) throws IOException{
 		labels=new LabelsFileMnist(pathLabels);
 		images=new ImagesFileMnist(pathImages);

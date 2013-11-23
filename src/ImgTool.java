@@ -26,25 +26,28 @@ public class ImgTool {
 	}
 
 	static public BufferedImage rotate(BufferedImage bi, double aa, boolean lib) {
-		double a=-aa;
+		double a = -aa;
 		while (a < -Math.PI)
 			a += Math.PI * 2;
 		while (a >= Math.PI)
 			a -= Math.PI * 2;
 		AffineTransform at = new AffineTransform();
-		at.rotate(-a, bi.getWidth()/2 , bi.getHeight()/2 );
-		
+		at.rotate(-a, bi.getWidth() / 2, bi.getHeight() / 2);
+
 		// at.scale(2, 2);
 		AffineTransformOp op = new AffineTransformOp(at,
 				AffineTransformOp.TYPE_BICUBIC);
-//		BufferedImage _bi = new BufferedImage(bi.getWidth() ,
-//				bi.getHeight(), BufferedImage.TYPE_INT_RGB);
-//		
-//		op.filter(bi, _bi);
-//		return _bi;
-		BufferedImage _bi=op.filter(bi, null);
-for(int x=0; x<_bi.getWidth(); x++)for(int y=0; y<_bi.getHeight(); y++) if(((_bi.getRGB(x, y)>> 24) & 0x0ff)==0) _bi.setRGB(x, y, Color.white.getRGB());
-		 return _bi;
+		// BufferedImage _bi = new BufferedImage(bi.getWidth() ,
+		// bi.getHeight(), BufferedImage.TYPE_INT_RGB);
+		//
+		// op.filter(bi, _bi);
+		// return _bi;
+		BufferedImage _bi = op.filter(bi, null);
+		for (int x = 0; x < _bi.getWidth(); x++)
+			for (int y = 0; y < _bi.getHeight(); y++)
+				if (((_bi.getRGB(x, y) >> 24) & 0x0ff) == 0)
+					_bi.setRGB(x, y, Color.white.getRGB());
+		return _bi;
 	}
 
 	static public BufferedImage rotate(BufferedImage bi, double a) {
@@ -147,7 +150,7 @@ for(int x=0; x<_bi.getWidth(); x++)for(int y=0; y<_bi.getHeight(); y++) if(((_bi
 				int rgb = bi.getRGB(x, y);
 
 				int grayscale = ((rgb & 0x0ff) + ((rgb >> 8) & 0x0ff) + ((rgb >> 16) & 0x0ff)) / 3;
-				if (grayscale > threshold || (((rgb >> 24) & 0x0ff) == 0 ))
+				if (grayscale > threshold || (((rgb >> 24) & 0x0ff) == 0))
 					img.setRGB(x, y, Color.WHITE.getRGB());
 				else
 					img.setRGB(x, y, Color.BLACK.getRGB());
@@ -179,6 +182,20 @@ for(int x=0; x<_bi.getWidth(); x++)for(int y=0; y<_bi.getHeight(); y++) if(((_bi
 		fr.pack();
 		fr.setVisible(true);
 	}
+	
+	public static void showImg(int[][] img, String title, int sideLength) {
+		ImgComponent ic = new ImgComponent(img);
+		ic.sideLength = sideLength;
+		JFrame fr = new JFrame(String.format(
+				"label: %s - [width: %d, height: %d]", title, img[0].length,
+				img.length));
+		fr.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		fr.getContentPane().add(ic);
+		fr.pack();
+		fr.setVisible(true);
+	}
+	
+	
 
 	public static void main(String[] args) throws IOException {
 		final String pathImage = "/home/bart/Pictures/a.png";

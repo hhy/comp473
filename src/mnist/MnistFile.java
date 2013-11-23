@@ -22,12 +22,12 @@ public abstract class MnistFile extends FileInputStream {
 
 	String path;
 	int magicNumber;
-	int numObjects;
+	public int numObjects;
 	
 	abstract int getObjectStoreSize();
 	abstract int getOffsetObjectArrays();
 	
-	Object getObject(int index) throws IOException{
+	public Object getObject(int index) throws IOException{
 		FileChannel fc=this.getChannel();
 		
 		
