@@ -41,14 +41,17 @@ public class PreProcessor {
 		return null;
 	}
 
-	BufferedImage normalize() {
-		return null;
+	static BufferedImage normalize(BufferedImage img)
+	{
+		return Normalization.normalize(img, 100, 100);
 	}
 
-	BufferedImage thin() {
-		return null;
+	static BufferedImage thin(BufferedImage img)
+	{
+		return Thinning.thin(img);
 		
 	}
+
 
 	
 
