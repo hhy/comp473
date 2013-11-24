@@ -78,11 +78,7 @@ public class GradientFeatureVector {
 
 		GradientOfMatrix mgz = new GradientOfMatrix(img, true);
 
-		// for(int i=0; i<mg.gs.length; i++){
-		// for(int j=0; j<mg.gs[0].length; j++)
-		// System.out.print(mg.gs[i][j]+", ");
-		// System.out.println();
-		// }
+		
 
 	}
 }

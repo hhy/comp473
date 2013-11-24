@@ -5,7 +5,7 @@ import java.io.IOException;
 
 public class ImagesFileMnist extends MatrixFile {
 
-	ImagesFileMnist(String name) throws IOException {
+	public ImagesFileMnist(String name) throws IOException {
 		super(name);
 	}
 

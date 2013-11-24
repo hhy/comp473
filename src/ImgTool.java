@@ -195,6 +195,36 @@ public class ImgTool {
 		fr.setVisible(true);
 	}
 	
+	public static void showImg(int[][] img, String title, int sideLength, boolean Binary) {
+		int[][] m=new int[img.length][];
+		for(int i=0; i<img.length;i++){
+			m[i]=new int[img[i].length];
+			for(int j=0; j<img[i].length; j++){
+				if(img[i][j]==1) m[i][j]=255;
+			}
+		}
+		showImg(m, title, sideLength);
+	}
+	
+	public static void showSubImg(int[][] img, String title, int sideLength, int x1, int x2, int y1, int y2) {
+		int[][] _img=new int[y2-y1+1][];
+		for(int i=0; i<_img.length; i++){
+			_img[i]=new int[x2-x1+1];
+			for(int j=0; j<_img[i].length; j++){
+				_img[i][j]=img[y1+i][x1+j];
+			}
+		}
+		ImgComponent ic = new ImgComponent(_img);
+		ic.sideLength = sideLength;
+		JFrame fr = new JFrame(String.format(
+				"label: %s - [width: %d, height: %d]", title, _img[0].length,
+				_img.length));
+		fr.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		fr.getContentPane().add(ic);
+		fr.pack();
+		fr.setVisible(true);
+	}
+	
 	
 
 	public static void main(String[] args) throws IOException {

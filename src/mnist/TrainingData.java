@@ -10,12 +10,15 @@ public class TrainingData {
 	public static final String pathFile="/tmp/tt";
 	public static final String pathLabelTraining=pathFile+"/train-labels-idx1-ubyte";
 	public static final String pathImageTraining=pathFile+"/train-images-idx3-ubyte";
+	public static final String pathLabelTest=pathFile+"/t10k-labels-idx1-ubyte";
+	public static final String pathImageTest=pathFile+"/t10k-images-idx3-ubyte";
+	
 	
 	LabelsFileMnist labels;
 	ImagesFileMnist images;
 	MatrixFile matrixs;
 	
-	TrainingData(String pathLabels, String pathImages) throws IOException{
+	public TrainingData(String pathLabels, String pathImages) throws IOException{
 		labels=new LabelsFileMnist(pathLabels);
 		images=new ImagesFileMnist(pathImages);
 	}

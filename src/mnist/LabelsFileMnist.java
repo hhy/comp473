@@ -28,13 +28,7 @@ public class LabelsFileMnist extends MnistFile {
 		return labels;
 	}
 
-	public static void main(String[] args) throws IOException {
-		LabelsFileMnist lb = new LabelsFileMnist(TrainingData.pathLabelTraining);
-		//lb.getLabels();
-		int a=(Integer)lb.getObject(0);
-		
-		System.out.println(a);
-	}
+
 
 	@Override
 	int getObjectStoreSize() {
@@ -53,6 +47,17 @@ public class LabelsFileMnist extends MnistFile {
 		return new Integer(this.read() & 0x0ff);
 	}
 	
+	public static void main(String[] args) throws IOException {
+		LabelsFileMnist lb = new LabelsFileMnist(TrainingData.pathLabelTest);
+		
+		System.out.println(lb.numObjects);
+		for(int i=0; i<lb.numObjects; i++){
+			int a=(Integer)lb.getObject(i);
+			if(a<0 || a>9) System.out.println(a);
+		}
+		
+		//System.out.println(a);
+	}
 	
 
 }
