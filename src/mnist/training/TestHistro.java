@@ -60,21 +60,30 @@ public class TestHistro {
 		for (int i = 0; i < iEnd - iStart; i++) {
 			Instance in = new Instance(this.lenVector);
 			HistroInfo hi = db.getHistro(i);
-			int xLen = hi.x.length, yLen = hi.y.length;
+			int xLen = hi.xs.length, yLen = hi.ys.length, neLen=hi.nes.length, seLen=hi.ses.length;
 			int j = 0;
 			for (; j < xLen; j++) {
-				in.setValue((Attribute) fv.elementAt(j), hi.x[j]);
+				in.setValue((Attribute) fv.elementAt(j), hi.xs[j]);
 			}
 
 			for (; j < xLen + yLen; j++) {
-				in.setValue((Attribute) fv.elementAt(j), hi.y[j - xLen]);
+				in.setValue((Attribute) fv.elementAt(j), hi.ys[j - xLen]);
 			}
+			
+			for (; j < xLen + yLen+neLen; j++) {
+				in.setValue((Attribute) fv.elementAt(j), hi.nes[j - xLen-yLen]);
+			}
+			
+			for (; j < xLen + yLen+neLen+seLen; j++) {
+				in.setValue((Attribute) fv.elementAt(j), hi.ses[j - xLen-yLen-neLen]);
+			}
+			
 
 			if (hi.label > 9 || hi.label < 0) {
 				System.out.println(String.format(
 						"[warning] wrong label %d: %d", i, hi.label));
 			}
-			in.setValue((Attribute) fv.elementAt(xLen + yLen), hi.label + "");
+			in.setValue((Attribute) fv.elementAt(xLen + yLen+neLen+seLen), hi.label + "");
 
 			instance.add(in);
 		}
@@ -122,8 +131,8 @@ public class TestHistro {
 		this.fillInstances(isTrainingSet, dbTrain, iTrainStart, iTrainEnd);
 		System.out.println("Training data ready.");
 
-		 //Classifier cModel = (Classifier) new MultilayerPerceptron();
-		Classifier cModel = (Classifier) new NaiveBayes();
+		Classifier cModel = (Classifier) new MultilayerPerceptron();
+		//Classifier cModel = (Classifier) new NaiveBayes();
 		// String[] options = {"-G"};
 		// cModel.setOptions(options);
 		cModel.buildClassifier(this.isTrainingSet);
@@ -166,8 +175,9 @@ public class TestHistro {
 		fMatrix = new MatrixFile(TrainingData.pathImageTest);
 		HistroDB dbTest = new HistroDB(fLabel, fMatrix);
 
-		TestHistro t = new TestHistro(dbTrain, dbTest, 0, 60000, 0, 10000, 57);
+		TestHistro t = new TestHistro(dbTrain, dbTest, 0, 6000, 0, 1000, 28*6-1);
 		t.trainNeuro();
+		//t.train();
 
 		System.out.println(t.fv.size());
 	}

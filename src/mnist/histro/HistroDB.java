@@ -37,7 +37,7 @@ public class HistroDB {
 		//ImgTool.showImg(m, "original", 400);
 		if(toBinaryFirst){
 			m=Binarizor.toBinary(m, threshold);
-			m=ThinningDitchs.doThinning(m);
+			//m=ThinningDitchs.doThinning(m);
 		}
 //		this.show(m, "after", 4);
 //		ImgTool.showImg(m, "after", 400, true);
@@ -51,7 +51,7 @@ public class HistroDB {
 
 		int label = (Integer) this.fLabel.getObject(index);
 		int[][] hs = this.getHistInfo(m);
-		return new HistroInfo(hs[0], hs[1], label);
+		return new HistroInfo(hs[0], hs[1], hs[2], hs[3], label);
 
 	}
 
@@ -67,22 +67,31 @@ public class HistroDB {
 
 		int[] xs = new int[w];
 		int[] ys = new int[h];
-		for (int i = 0; i < w; i++)
-			xs[i] = 0;
-		for (int i = 0; i < h; i++)
+		int[] nes=new int[w+h-1];
+		int[] ses=new int[w+h-1];
+		for (int i = 0; i < w; i++){
 			ys[i] = 0;
+			xs[i] = 0;
+		}
+		
+		for(int i=0; i<w+h-1; i++){
+			ses[i]=0;
+			nes[i]=0;
+		}
+			
+		
 
 		for (int x = 0; x < w; x++) {
 			for (int y = 0; y < h; y++) {
 				if (m[y][x] > threshold) {
-
 					xs[x]++;
-
 					ys[y]++;
+					nes[x+y]++;
+					ses[x-y+w-1]++;
 				}
 			}
 		}
-		return new int[][] { xs, ys };
+		return new int[][] { xs, ys, nes, ses};
 	}
 	
 	public void show(int[][] mm, String title, int width) {
