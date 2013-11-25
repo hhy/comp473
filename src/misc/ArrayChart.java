@@ -1,4 +1,4 @@
-package proj;
+package proj.misc;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -44,7 +44,7 @@ public class ArrayChart extends Component {
 		}
 	}
 
-	static void showArray(int[] xs, int w, int h, String title){
+	public static void showArray(int[] xs, int w, int h, String title){
 		
 		JFrame jf=new JFrame(title);
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

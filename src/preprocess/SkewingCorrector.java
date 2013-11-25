@@ -1,4 +1,4 @@
-package proj;
+package proj.preprocess;
 
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -10,6 +10,10 @@ import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+import proj.misc.ArrayChart;
+import proj.misc.HistroChart;
+import proj.misc.ImgTool;
 
 public class SkewingCorrector {
 	static int[] averageFilterForArray(int[] a, int w, int start, int end) {
@@ -49,7 +53,7 @@ public class SkewingCorrector {
 		jf.setVisible(true);
 	}
 
-	static int[] getPixelsYDistribution(BufferedImage bi, int threshold,
+	public static int[] getPixelsYDistribution(BufferedImage bi, int threshold,
 			int widthFilter, boolean inverse) {
 
 		BufferedImage img = ImgTool.toBin(bi, threshold, true);
@@ -74,7 +78,7 @@ public class SkewingCorrector {
 		return xxs;
 	}
 
-	static int[] getPixelsXDistribution(BufferedImage bi, int threshold,
+	public static int[] getPixelsXDistribution(BufferedImage bi, int threshold,
 			int widthFilter, boolean inverse) {
 
 		BufferedImage img = ImgTool.toBin(bi, threshold, true);

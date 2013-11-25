@@ -1,4 +1,4 @@
-package proj;
+package proj.misc;
 
 import java.awt.Color;
 

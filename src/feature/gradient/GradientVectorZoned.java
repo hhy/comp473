@@ -1,41 +1,58 @@
-package proj.mnist.gradient;
+package proj.feature.gradient;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import proj.ImgTool;
+import proj.misc.ImgTool;
 import proj.mnist.MatrixFile;
 import proj.mnist.TrainingData;
 
-public class GradientFeatureVector {
-	double vectors[][];
+public class GradientVectorZoned {
+	private double vectors[][];
 
-	public GradientFeatureVector(int[][] img, int levels) {
-		this.vectors = this.getVectors(img, levels);
+	public GradientVectorZoned(int[][] img, int levels) {
+		this.setVectors(img, levels);
+		this.mergeZones();
+		
+	}
+	
+	public static double[] getGradient(int[][] img, int levels){
+		GradientVectorZoned gv=new GradientVectorZoned(img, levels);
+		return gv.mergeZones();
 	}
 
-	public double[][] getVectors(int[][] img, int levels) {
+	public double[] mergeZones(){
+		int h=this.vectors.length, w=this.vectors[0].length;
+		double[] all=new double[w*h];
+		for(int y=0; y<h; y++){
+			for(int x=0; x<w; x++)
+				all[y*w+x]=vectors[y][x];
+		}
+		return all;
+	}
+	
+	private void setVectors(int[][] img, int levels) {
 		GradientOfMatrix mgz = new GradientOfMatrix(img, true);
 		Gradient[][][][] gss = mgz.gss;
 
-		double[][] _vectors = new double[gss.length * gss[0].length][];
+		this.vectors = new double[gss.length * gss[0].length][];
 		// List<double[]> _vectors = new ArrayList<double[]>();
 
 		// this.vectors=_vectors;
-		System.out.println(String.format("%d x %d", gss.length, gss[0].length));
+		//System.out.println(String.format("%d x %d", gss.length, gss[0].length));
 		for (int yZone = 0; yZone < gss.length; yZone++) {
 			for (int xZone = 0; xZone < gss[0].length; xZone++) {
 				double[] dd = this.getFeatureVector(gss[yZone][xZone], levels);
-				_vectors[yZone * gss.length + xZone] = dd;
+				this.vectors[yZone * gss.length + xZone] = dd;
 
 			}
 		}
-		return _vectors;
+		
 
 	}
 
-	public double[] getFeatureVector(Gradient[][] g, int levels) {
+	private double[] getFeatureVector(Gradient[][] g, int levels) {
 		double[] v = new double[levels];
 		double aa = Math.PI * 2 / levels;
 		for (int i = 0; i < v.length; i++) {
@@ -65,7 +82,7 @@ public class GradientFeatureVector {
 			}
 		}
 
-		GradientFeatureVector mv = new GradientFeatureVector(img, 16);
+		GradientVectorZoned mv = new GradientVectorZoned(img, 16);
 		for (int y = 0; y < mv.vectors.length; y++) {
 			System.out.print(String.format("---%02d---", y));
 			for (int x = 0; x < mv.vectors[y].length; x++) {

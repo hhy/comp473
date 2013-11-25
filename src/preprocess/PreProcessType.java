@@ -1,0 +1,5 @@
+package proj.preprocess;
+
+public enum PreProcessType {
+	BINARIZATION, NORMALIZATION, SLANTCORRECTION, THINNING_DITCHS, THINNING_SUEN
+}

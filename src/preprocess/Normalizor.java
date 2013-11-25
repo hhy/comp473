@@ -10,7 +10,7 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import proj.ImgTool;
+import proj.misc.ImgTool;
 import proj.mnist.MatrixFile;
 import proj.mnist.TrainingData;
 

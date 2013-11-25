@@ -1,4 +1,4 @@
-package proj.mnist.gradient;
+package proj.feature.gradient;
 
 public class Gradient {
 	public double angle, strength;

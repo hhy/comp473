@@ -5,7 +5,7 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-import proj.ImgTool;
+import proj.misc.ImgTool;
 import proj.mnist.ImagesFileMnist;
 import proj.mnist.MatrixFile;
 import proj.mnist.TrainingData;

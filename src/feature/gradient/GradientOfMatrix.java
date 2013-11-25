@@ -1,4 +1,4 @@
-package proj.mnist.gradient;
+package proj.feature.gradient;
 
 public class GradientOfMatrix {
 	Gradient[][] gs;

@@ -1,4 +1,4 @@
-package proj;
+package proj.misc;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
+
+import proj.preprocess.SkewingCorrector;
 
 public class PreProcessor {
 	BufferedImage bi;

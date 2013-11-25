@@ -1,4 +1,4 @@
-package proj;
+package proj.misc;
 
 import java.awt.Color;
 import java.awt.Point;
@@ -142,7 +142,7 @@ public class ImgTool {
 				(int) (p.x * (-sin) + p.y * cos));
 	}
 
-	static BufferedImage toBin(BufferedImage bi, int threshold, boolean inverse) {
+	public static BufferedImage toBin(BufferedImage bi, int threshold, boolean inverse) {
 		BufferedImage img = new BufferedImage(bi.getWidth(), bi.getHeight(),
 				BufferedImage.TYPE_INT_RGB);
 		for (int x = 0; x < bi.getWidth(); x++)

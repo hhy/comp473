@@ -1,4 +1,4 @@
-package proj;
+package proj.misc;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -13,6 +13,8 @@ import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+import proj.preprocess.SkewingCorrector;
 
 public class HistroChart extends JPanel {
 	int[] xdata, ydata;

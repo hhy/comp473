@@ -1,4 +1,4 @@
-package proj;
+package proj.preprocess;
 
 import java.awt.Container;
 import java.awt.GridLayout;
@@ -11,6 +11,10 @@ import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+import proj.misc.ArrayChart;
+import proj.misc.HistroChart;
+import proj.misc.ImgComponent;
 
 public class CharacterExtractor {
 	static void showImgs(BufferedImage[] imgs){

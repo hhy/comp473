@@ -3,8 +3,8 @@ package proj.mnist;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-import proj.ImgComponent;
-import proj.ImgTool;
+import proj.misc.ImgComponent;
+import proj.misc.ImgTool;
 
 public class TrainingData {
 	public static final String pathFile="/tmp/tt";
