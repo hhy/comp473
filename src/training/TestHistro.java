@@ -143,6 +143,78 @@ public class TestHistro {
 		System.out.println(strSummary);
 
 	}
+	public void j48train() throws Exception {
+
+		this.fillInstances(isTrainingSet, dbTrain, iTrainStart, iTrainEnd);
+		System.out.println("Training data ready.");
+
+		Classifier cModel = (Classifier) new J48();
+		cModel.buildClassifier(this.isTrainingSet);
+
+		// Evaluation eTest = new Evaluation(isTrainingSet);
+
+		Evaluation eTest = new Evaluation(isTrainingSet);
+		System.out.println("Training finish");
+
+		this.fillInstances(isTestSet, dbTest, this.iTestStart, this.iTestEnd);
+		System.out.println("Testing data ready.");
+
+		eTest.evaluateModel(cModel, isTestSet);
+		// eTest.evaluateModel(cModel, isTrainingSet);
+		System.out.println("Testing finish");
+
+		String strSummary = eTest.toSummaryString();
+
+		// Get the confusion matrix
+		double[][] cmMatrix = eTest.confusionMatrix();
+
+		strSummary += "\n[Confusion Matrix]\n";
+		for (int i = 0; i < cmMatrix.length; i++) {
+			for (int j = 0; j < cmMatrix[i].length; j++) {
+				strSummary += String.format("[%04.0f]", cmMatrix[i][j]);
+			}
+			strSummary += "\n";
+		}
+
+		System.out.println(strSummary);
+
+	}
+	public void knnTraining(int k ) throws Exception {
+
+		this.fillInstances(isTrainingSet, dbTrain, iTrainStart, iTrainEnd);
+		System.out.println("Training data ready.");
+
+		Classifier cModel = (Classifier) new IBk(k);
+		cModel.buildClassifier(this.isTrainingSet);
+
+		// Evaluation eTest = new Evaluation(isTrainingSet);
+
+		Evaluation eTest = new Evaluation(isTrainingSet);
+		System.out.println("Training finish");
+
+		this.fillInstances(isTestSet, dbTest, this.iTestStart, this.iTestEnd);
+		System.out.println("Testing data ready.");
+
+		eTest.evaluateModel(cModel, isTestSet);
+		// eTest.evaluateModel(cModel, isTrainingSet);
+		System.out.println("Testing finish");
+
+		String strSummary = eTest.toSummaryString();
+
+		// Get the confusion matrix
+		double[][] cmMatrix = eTest.confusionMatrix();
+
+		strSummary += "\n[Confusion Matrix]\n";
+		for (int i = 0; i < cmMatrix.length; i++) {
+			for (int j = 0; j < cmMatrix[i].length; j++) {
+				strSummary += String.format("[%04.0f]", cmMatrix[i][j]);
+			}
+			strSummary += "\n";
+		}
+
+		System.out.println(strSummary);
+
+	}
 
 	public void trainNeuro() throws Exception {
 
