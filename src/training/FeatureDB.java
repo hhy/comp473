@@ -27,52 +27,45 @@ public class FeatureDB {
 	PreProcessor pre;
 	int label;
 	
+	
+	public int getVlength(){
+		int l=0;
+		for(FeatureType t: types){
+			if(FeatureType.HISTROGRAM==t) l+=Features.vLenghtHist;
+			if(FeatureType.GRADIENT==t) l+=Features.vLengthGrad;
+		}
+		return l+1;
+	}
 
-	public FeatureDB(MatrixFile fMatrix, LabelsFileMnist fLabel, FeatureType[] types, PreProcessType[] pre) {
+	public FeatureDB(MatrixFile fMatrix, LabelsFileMnist fLabel,
+			FeatureType[] types, PreProcessType[] pre) {
 		this.fMatrix = fMatrix;
-		this.fLabel=fLabel;
-		this.types=types;
-		this.pre=new PreProcessor(pre);
+		this.fLabel = fLabel;
+		this.types = types;
+		this.pre = new PreProcessor(pre);
 	}
 
 	public Map<FeatureType, Object> getFeatures(int index) throws Exception {
-		int[][] img=(int[][]) this.fMatrix.getObject(index);
+		int[][] img = (int[][]) this.fMatrix.getObject(index);
 
-		img=this.pre.process(img);
-		
-		Features f=new Features(img, types);
-		
+		img = this.pre.process(img);
+
+		Features f = new Features(img, types);
+
 		return f.features;
 	}
-	public int getLabel(int index) throws IOException{
-		 return (Integer) this.fLabel.getObject(index);
+
+	public int getLabel(int index) throws IOException {
+		return (Integer) this.fLabel.getObject(index);
 
 	}
-	
-	
 
-//	public HistroInfo getFeatures(int index, boolean standardization,
-//			boolean slantCorrect, boolean toBinaryFirst, int threshold)
-//			throws IOException {
-//
-//		int[][] m = (int[][]) this.fMatrix.getObject(index);
-////		this.show(m, "original", 4);
-
-//
-////		int label = (Integer) this.fLabel.getObject(index);
-////		int[][] hs = this.getHistInfo(m);
-////		return new HistroInfo(hs[0], hs[1], hs[2], hs[3], label);
-//
-//	}
-
-	
-	
 	public void show(int[][] mm, String title, int width) {
 		System.out.println("--------------<" + title + ">----------");
-		for (int n = 0; n <mm.length; n++) {
+		for (int n = 0; n < mm.length; n++) {
 			for (int m = 0; m < mm[0].length; m++) {
-				System.out.print(String.format("%" + (width==0?"":width) + "d",
-						mm[n][m]));
+				System.out.print(String.format("%" + (width == 0 ? "" : width)
+						+ "d", mm[n][m]));
 			}
 			System.out.println();
 		}
@@ -92,20 +85,15 @@ public class FeatureDB {
 
 		FeatureDB dbTrain = new FeatureDB(fMatrix, fLabel, featureTypes,
 				procedurePreProcess);
-		
+
 		dbTrain.getFeatures(4);
-		
-		
-		
 
 		fLabel = new LabelsFileMnist(TrainingData.pathLabelTest);
 		fMatrix = new MatrixFile(TrainingData.pathImageTest);
 		FeatureDB dbTest = new FeatureDB(fMatrix, fLabel, featureTypes,
 				procedurePreProcess);
 
-		
-		//t.trainNeuro();
-		
+		// t.trainNeuro();
 
 	}
 

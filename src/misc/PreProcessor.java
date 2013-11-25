@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import proj.preprocess.Normalizor;
 import proj.preprocess.SkewingCorrector;
 
 public class PreProcessor {
@@ -41,16 +42,16 @@ public class PreProcessor {
 		return null;
 	}
 
-	static BufferedImage normalize(BufferedImage img)
-	{
-		return Normalization.normalize(img, 100, 100);
-	}
-
-	static BufferedImage thin(BufferedImage img)
-	{
-		return Thinning.thin(img);
-		
-	}
+//	static BufferedImage normalize(BufferedImage img)
+//	{
+//		return Normalizor.normalize(img, 100, 100);
+//	}
+//
+//	static BufferedImage thin(BufferedImage img)
+//	{
+//		return Thinning.thin(img);
+//		
+//	}
 
 
 	

@@ -7,7 +7,9 @@ import java.util.List;
 import proj.feature.gradient.GradientVectorZoned;
 
 public class Features {
-	
+	public final static int LEVEL=8;
+	public final static int vLenghtHist = 28*6-2;
+	public static int vLengthGrad=LEVEL*16;
 	public HashMap<FeatureType, Object> features;
 	private int[][] img;
 	private FeatureType[] types;
@@ -24,7 +26,7 @@ public class Features {
 
 			switch (types[i]) {
 			case GRADIENT:
-				double[] gv=GradientVectorZoned.getGradient(img, 16);
+				double[] gv=GradientVectorZoned.getGradient(img, LEVEL);
 				features.put(FeatureType.GRADIENT, gv);
 				break;
 			case HISTROGRAM:

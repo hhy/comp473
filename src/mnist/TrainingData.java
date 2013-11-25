@@ -7,7 +7,8 @@ import proj.misc.ImgComponent;
 import proj.misc.ImgTool;
 
 public class TrainingData {
-	public static final String pathFile="/tmp/tt";
+	//public static final String pathFile="/tmp/tt";
+	public static final String pathFile="/home/bart/course/comp473/proj/mnist";
 	public static final String pathLabelTraining=pathFile+"/train-labels-idx1-ubyte";
 	public static final String pathImageTraining=pathFile+"/train-images-idx3-ubyte";
 	public static final String pathLabelTest=pathFile+"/t10k-labels-idx1-ubyte";

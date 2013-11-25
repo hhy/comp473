@@ -23,14 +23,14 @@ import weka.core.FastVector;
 import weka.core.Instance;
 import weka.core.Instances;
 
-public class TestHistro {
+public class Learning {
 	FastVector fv;
 	Instances isTrainingSet, isTestSet;
 	FeatureDB dbTrain, dbTest;
 	int iTrainStart, iTrainEnd, iTestStart, iTestEnd;
 	int lenVector;
 
-	public TestHistro(FeatureDB dbTrain, FeatureDB dbTest, int iTrainStart,
+	public Learning(FeatureDB dbTrain, FeatureDB dbTest, int iTrainStart,
 			int iTrainEnd, int iTestStart, int iTestEnd, int lenVector) {
 
 		this.dbTrain = dbTrain;
@@ -282,7 +282,7 @@ public class TestHistro {
 		FeatureDB dbTest = new FeatureDB(fMatrix, fLabel, featureTypes,
 				procedurePreProcess);
 
-		TestHistro t = new TestHistro(dbTrain, dbTest, 0, 6000, 0, 1000, 423);
+		Learning t = new Learning(dbTrain, dbTest, 0, 6000, 0, 1000, dbTrain.getVlength());
 		//	t.trainNeuro();
 		//t.train();
 
