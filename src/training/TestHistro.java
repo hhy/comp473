@@ -16,6 +16,8 @@ import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.NaiveBayes;
 import weka.classifiers.functions.MultilayerPerceptron;
+import weka.classifiers.lazy.IBk;
+import weka.classifiers.trees.J48;
 import weka.core.Attribute;
 import weka.core.FastVector;
 import weka.core.Instance;
@@ -90,11 +92,11 @@ public class TestHistro {
 			Map<FeatureType, Object> features = db.getFeatures(i);
 			double[] vector = this.mergeFeature(features);
 
-//			System.out.println(vector.length);
-			
+			//			System.out.println(vector.length);
+
 			for (int j = 0; j < vector.length; j++) {
 				in.setValue((Attribute) fv.elementAt(j), vector[j]);
-				
+
 			}
 
 			if (label > 9 || label < 0) {
@@ -118,6 +120,7 @@ public class TestHistro {
 		// Evaluation eTest = new Evaluation(isTrainingSet);
 
 		Evaluation eTest = new Evaluation(isTrainingSet);
+	
 		System.out.println("Training finish");
 
 		this.fillInstances(isTestSet, dbTest, this.iTestStart, this.iTestEnd);
@@ -143,6 +146,7 @@ public class TestHistro {
 		System.out.println(strSummary);
 
 	}
+
 	public void j48train() throws Exception {
 
 		this.fillInstances(isTrainingSet, dbTrain, iTrainStart, iTrainEnd);
@@ -216,6 +220,8 @@ public class TestHistro {
 
 	}
 
+
+
 	public void trainNeuro() throws Exception {
 
 		this.fillInstances(isTrainingSet, dbTrain, iTrainStart, iTrainEnd);
@@ -261,9 +267,11 @@ public class TestHistro {
 		MatrixFile fMatrix = new MatrixFile(TrainingData.pathImageTraining);
 
 		PreProcessType[] procedurePreProcess = new PreProcessType[] {
-				PreProcessType.BINARIZATION, PreProcessType.THINNING_SUEN,
-				PreProcessType.SLANTCORRECTION, PreProcessType.NORMALIZATION };
-		
+				PreProcessType.BINARIZATION,
+				PreProcessType.SLANTCORRECTION,
+				PreProcessType.THINNING_SUEN,
+				PreProcessType.NORMALIZATION };
+
 		FeatureType[] featureTypes = new FeatureType[] { FeatureType.GRADIENT, FeatureType.HISTROGRAM };
 
 		FeatureDB dbTrain = new FeatureDB(fMatrix, fLabel, featureTypes,
@@ -275,9 +283,10 @@ public class TestHistro {
 				procedurePreProcess);
 
 		TestHistro t = new TestHistro(dbTrain, dbTest, 0, 6000, 0, 1000, 423);
-		t.trainNeuro();
-//		t.train();
+		//	t.trainNeuro();
+		//t.train();
 
+		t.knnTraining(5);
 		System.out.println(t.fv.size());
 	}
 }
