@@ -189,7 +189,7 @@ public class ImgTool {
 		JFrame fr = new JFrame(String.format(
 				"label: %s - [width: %d, height: %d]", title, img[0].length,
 				img.length));
-		fr.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//fr.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		fr.getContentPane().add(ic);
 		fr.pack();
 		fr.setVisible(true);

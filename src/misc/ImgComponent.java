@@ -1,5 +1,6 @@
 package proj.misc;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -33,6 +34,16 @@ public class ImgComponent extends Component {
 		for(int y=0; y<m.length; y++)for(int x=0; x<m[0].length; x++){
 			int rgb=m[y][x];
 			int grayscale = (rgb  + (rgb << 8) + (rgb << 16));
+			this.img.setRGB(x, y, grayscale);
+		}
+	}
+	
+	public ImgComponent(int[][] m, boolean binary){
+		this.img=new BufferedImage(m[0].length, m.length, BufferedImage.TYPE_INT_RGB);
+		for(int y=0; y<m.length; y++)for(int x=0; x<m[0].length; x++){
+			int rgb=m[y][x];
+			
+			int grayscale = (rgb==1? Color.WHITE.getRGB(): Color.BLACK.getRGB());
 			this.img.setRGB(x, y, grayscale);
 		}
 	}

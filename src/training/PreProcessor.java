@@ -1,5 +1,6 @@
 package proj.training;
 
+import proj.misc.ImgTool;
 import proj.preprocess.Binarizor;
 import proj.preprocess.Normalizor;
 import proj.preprocess.PreProcessType;
@@ -17,22 +18,32 @@ public class PreProcessor {
 	}
 
 	public int[][] process(int[][] img) {
+		System.out.println("preprocess" +types.length);
 		for (int i = 0; i < types.length; i++) {
 			switch (this.types[i]) {
 			case BINARIZATION:
+				
 				img=Binarizor.toBinary(img, 30);
 				break;
 			case NORMALIZATION:
+				
 				img=Normalizor.normalize(img);
+				
 				break;
 			case SLANTCORRECTION:
+				
 				img=SlantCorrector.correctSlantProcess(img);
+				
 				break;
 			case THINNING_DITCHS:
+				
 				img=ThinningDitchs.doThinning(img);
+				
 				break;	
 			case THINNING_SUEN:
+				
 				img=ThinningSuen.doThinning(img);
+				
 				break;
 			}
 		}

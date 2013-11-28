@@ -7,7 +7,7 @@ import java.util.List;
 import proj.feature.gradient.GradientVectorZoned;
 
 public class Features {
-	public final static int LEVEL=8;
+	public final static int LEVEL=16;
 	public final static int vLenghtHist = 28*6-2;
 	public static int vLengthGrad=LEVEL*16;
 	public HashMap<FeatureType, Object> features;
